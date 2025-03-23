@@ -47,7 +47,6 @@ resource "aws_ecs_service" "tradapp" {
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.service.arn
   desired_count   = 1
-  depends_on      = [aws_iam_role_policy.foo]
 
   ordered_placement_strategy {
     type  = "binpack"
