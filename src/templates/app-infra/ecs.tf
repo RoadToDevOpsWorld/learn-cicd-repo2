@@ -67,41 +67,6 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
   })
 }
 
-# Define the ECS task role (for the permissions your task requires)
-resource "aws_iam_role" "ecs_task_role" {
-  name = "ecs_task_role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = "sts:AssumeRole"
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
-        }
-        Effect    = "Allow"
-        Sid       = ""
-      }
-    ]
-  })
-}
-
-# Optional: Attach additional policies for ECS task permissions, if needed
-resource "aws_iam_role_policy" "ecs_task_policy" {
-  name   = "ecs_task_policy"
-  role   = aws_iam_role.ecs_task_role.name
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = "s3:ListBucket"
-        Resource = "*"
-        Effect   = "Allow"
-      }
-    ]
-  })
-}
-
 # ECS task definition
 resource "aws_ecs_task_definition" "service" {
   family                   = "service"
