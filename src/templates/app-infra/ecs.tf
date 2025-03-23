@@ -89,31 +89,6 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   })
 }
 
-resource "aws_iam_role_policy" "ecs_task_execution_policy" {
-  name   = "ecs_task_execution_policy"
-  role   = aws_iam_role.ecs_task_execution_role.name
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action   = "ecr:GetAuthorizationToken"
-        Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
-        Effect   = "Allow"
-      },
-      {
-        Action   = "ecr:BatchCheckLayerAvailability"
-        Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
-        Effect   = "Allow"
-      },
-      {
-        Action   = "ecr:GetDownloadUrlForLayer"
-        Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
-        Effect   = "Allow"
-      }
-    ]
-  })
-}
-
 resource "aws_ecs_service" "tradapp" {
   name            = "tradapp"
   cluster         = aws_ecs_cluster.this.id
