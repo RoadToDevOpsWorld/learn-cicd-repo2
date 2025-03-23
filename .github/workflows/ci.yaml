@@ -29,6 +29,6 @@ jobs:
           repo: ecr01
           create_repo: true
           region: us-east-1
-          tags: tradding-platform:${{ github.run_number }}
+          tags: tradding-platform-${{ github.run_number }}
           dockerfile: ./src/templates/docker/Dockerfile
           path: ./src/templates/docker/
