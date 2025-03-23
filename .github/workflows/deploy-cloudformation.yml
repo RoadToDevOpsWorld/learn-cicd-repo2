@@ -25,5 +25,5 @@ jobs:
         run: |
           aws cloudformation deploy \
             --stack-name terraform-backend \
-            --template-file src/templates/bootstrap/s3-dynamodb.yaml \
+            --template-file src/templates/bootstrap/s3-dynamodb-ecr.yaml \
             --capabilities CAPABILITY_NAMED_IAM
