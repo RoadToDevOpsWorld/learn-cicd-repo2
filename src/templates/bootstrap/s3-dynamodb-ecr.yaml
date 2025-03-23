@@ -53,7 +53,7 @@ Resources:
         - AttributeName: LockID
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
-  ECR:
+  ECRRepository:
     Type: AWS::ECR::Repository
     Properties:
       RepositoryName: "ecr01"
@@ -64,7 +64,7 @@ Resources:
             Effect: Allow
             Principal:
               AWS:
-                - "arn:aws:iam::${AWS::AccountId}:user/cloud_user"
+                - !Sub "arn:aws:iam::${AWS::AccountId}:user/cloud_user"
             Action:
               - "ecr:GetDownloadUrlForLayer"
               - "ecr:BatchGetImage"
@@ -73,7 +73,6 @@ Resources:
               - "ecr:InitiateLayerUpload"
               - "ecr:UploadLayerPart"
               - "ecr:CompleteLayerUpload"
-
 Outputs:
   S3BucketName:
     Description: "S3 Bucket for Terraform state"
