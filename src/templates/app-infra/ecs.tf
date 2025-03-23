@@ -22,25 +22,6 @@ resource "aws_ecs_capacity_provider" "this" {
   }
 }
 
-# Define the ECS task execution role (for pulling the image from ECR)
-resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecs_task_execution_role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = "sts:AssumeRole"
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
-        }
-        Effect    = "Allow"
-        Sid       = ""
-      }
-    ]
-  })
-}
-
 # Attach policies to the ECS task execution role to allow interaction with ECR
 resource "aws_iam_role_policy" "ecs_task_execution_policy" {
   name   = "ecs_task_execution_policy"
