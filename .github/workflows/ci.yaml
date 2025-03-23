@@ -6,7 +6,6 @@ permissions:
 
 jobs:
   build_publish:
-    needs: testing
     runs-on: ubuntu-latest
     steps:
       - name: Code checkout
