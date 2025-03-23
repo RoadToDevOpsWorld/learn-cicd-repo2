@@ -23,9 +23,9 @@ jobs:
       - name: Build & Upload backend server image to ECR
         uses: kciter/aws-ecr-action@v5
         with:
-          access_key_id: ${{ steps.aws-configuration.outputs.aws-access-key-id }}
-          secret_access_key: ${{ steps.aws-configuration.outputs.aws-secret-access-key }}
-          account_id: ${{ steps.aws-configuration.outputs.aws-account-id }}
+          access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          account_id: "905418418143"
           repo: ecr01
           create_repo: true
           region: us-east-1
