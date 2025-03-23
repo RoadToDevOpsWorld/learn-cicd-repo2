@@ -23,11 +23,11 @@ resource "aws_ecs_capacity_provider" "this" {
 }
 
 resource "aws_ecs_task_definition" "service" {
-  family = "service"
-  container_definitions = jsonencode([
+  family                   = "service"
+  container_definitions    = jsonencode([
     {
       name      = "first"
-      image     = "service-first"
+      image     = "905418418143.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-10"
       cpu       = 10
       memory    = 512
       essential = true
@@ -40,6 +40,51 @@ resource "aws_ecs_task_definition" "service" {
     }
   ])
 
+  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn  # Ensure you have a task execution role defined
+  task_role_arn      = aws_iam_role.ecs_task_role.arn            # Optionally define a task role if needed
+}
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecs_task_execution_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action    = "sts:AssumeRole"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+        Effect    = "Allow"
+        Sid       = ""
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "ecs_task_execution_policy" {
+  name   = "ecs_task_execution_policy"
+  role   = aws_iam_role.ecs_task_execution_role.name
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = "ecr:GetAuthorizationToken"
+        Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
+        Effect   = "Allow"
+      },
+      {
+        Action   = "ecr:BatchCheckLayerAvailability"
+        Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
+        Effect   = "Allow"
+      },
+      {
+        Action   = "ecr:GetDownloadUrlForLayer"
+        Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
+        Effect   = "Allow"
+      }
+    ]
+  })
 }
 
 resource "aws_ecs_service" "tradapp" {
