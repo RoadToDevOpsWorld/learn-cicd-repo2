@@ -11,13 +11,24 @@ variable "cidr2" {}
 variable "env" {}
 
 # Fetch the latest AMI owned by the user
-data "aws_ami" "latest_owned_ami" {
-  owners      = ["self"]
+data "aws_ami" "ubuntu_jammy_22_04" {
   most_recent = true
 
+  owners = ["099720109477"]
+
   filter {
-    name   = "state"
-    values = ["available"]
+    name   = "name"
+    values = ["ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
   }
 }
 
@@ -41,7 +52,7 @@ data "aws_subnet" "this2" {
 # Create a Launch Template
 resource "aws_launch_template" "this" {
   name_prefix   = "launch-template-${var.env}"
-  image_id      = data.aws_ami.latest_owned_ami.id
+  image_id      = data.aws_ami.ubuntu_jammy_22_04.id
   instance_type = "t3.medium"
 
   network_interfaces {
