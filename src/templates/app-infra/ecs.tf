@@ -68,7 +68,7 @@ resource "aws_ecs_task_definition" "service" {
   ])
 
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn  # Use the execution role for pulling from ECR
-  task_role_arn      = aws_iam_role.ecs_task_role.arn            # Use the task role for additional permissions
+  task_role_arn      = aws_iam_role.ecs_task_execution_role.arn   # Use the task role for additional permissions
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
