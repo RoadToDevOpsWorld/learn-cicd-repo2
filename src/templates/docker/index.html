@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trading Platform</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="icon" type="image/x-icon" href="images/favicon.png" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <div class="logo">Trading Platform</div>
+        <nav>
+          <ul>
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="#">Trade Items</a></li>
+            <li><a href="#">My Trades</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <aside class="sidebar">
+        <ul>
+          <li><a href="#">Post a New Item</a></li>
+          <li><a href="#">My Watchlist</a></li>
+          <li><a href="#">Trade History</a></li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+        <section class="items-grid">
+          <article class="item-card">
+            <img src="images/vintage_camera.png" alt="Item 1" />
+            <div class="item-card-content">
+              <h3>Vintage Camera</h3>
+              <p>
+                A well-maintained vintage camera in excellent condition. Perfect
+                for photography enthusiasts.
+              </p>
+              <button>Propose Trade</button>
+            </div>
+          </article>
+          <article class="item-card">
+            <img src="images/mountain_bike.png" alt="Item 2" />
+            <div class="item-card-content">
+              <h3>Mountain Bike</h3>
+              <p>
+                Professional mountain bike, perfect for trails and outdoor
+                adventures.
+              </p>
+              <button>Propose Trade</button>
+            </div>
+          </article>
+          <article class="item-card">
+            <img src="images/gaming_console.png" alt="Item 3" />
+            <div class="item-card-content">
+              <h3>Gaming Console</h3>
+              <p>
+                Latest gaming console with two controllers. Includes popular
+                gaming titles.
+              </p>
+              <button>Propose Trade</button>
+            </div>
+          </article>
+        </section>
+
+        <section class="trade-form">
+          <h2>Propose a Trade</h2>
+          <form id="tradeForm">
+            <div class="form-group floating">
+              <input
+                type="text"
+                id="offered-item"
+                class="form-control"
+                required
+                placeholder=" "
+              />
+              <label for="offered-item">Item You're Offering</label>
+              <div class="form-feedback">
+                Please specify the item you're offering
+              </div>
+            </div>
+
+            <div class="form-group floating">
+              <input
+                type="text"
+                id="desired-item"
+                class="form-control"
+                required
+                placeholder=" "
+              />
+              <label for="desired-item">Item You Want</label>
+              <div class="form-feedback">Please specify the item you want</div>
+            </div>
+
+            <div class="form-group">
+              <label for="message">Message to Trader</label>
+              <textarea
+                id="message"
+                class="form-control"
+                required
+                placeholder="Describe why you're interested in this trade and any additional details..."
+              ></textarea>
+              <div class="form-feedback">Please include a message</div>
+            </div>
+
+            <div class="form-submit">
+              <button type="submit" class="btn btn-primary">
+                Submit Trade Proposal
+              </button>
+            </div>
+          </form>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <div class="footer-content">
+        <div class="contact-info">
+          <p>
+            <i class="fas fa-envelope"></i> Email: contact@tradingplatform.com
+          </p>
+          <p><i class="fas fa-phone"></i> Phone: +1 (555) 123-4567</p>
+        </div>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"
+            ><i class="fab fa-facebook"></i> Facebook</a
+          >
+          <a href="#" aria-label="Twitter"
+            ><i class="fab fa-twitter"></i> Twitter</a
+          >
+          <a href="#" aria-label="Instagram"
+            ><i class="fab fa-instagram"></i> Instagram</a
+          >
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
