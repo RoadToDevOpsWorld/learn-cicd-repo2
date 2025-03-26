@@ -72,6 +72,14 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
         Action   = "ecr:GetDownloadUrlForLayer"
         Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
         Effect   = "Allow"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "*"
       }
     ]
   })
@@ -80,19 +88,28 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
 # ECS task definition
 resource "aws_ecs_task_definition" "service" {
   family                   = "service"
-  container_definitions    = jsonencode([
+   container_definitions    = jsonencode([
     {
       name      = "first"
-      image     = "905418418143.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-10"  # Correct ECR repository and image tag
-      cpu       = 10
+      image     = "905418418143.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-10"
+      cpu       = 256  // Increase CPU units
       memory    = 512
       essential = true
       portMappings = [
         {
           containerPort = 80
-          hostPort      = 8080
+          hostPort     = 8080
+          protocol     = "tcp"  // Add protocol
         }
       ]
+      logConfiguration = {  // Add logging
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = "/ecs/tradapp"
+          "awslogs-region"        = "us-east-1"
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 
@@ -118,15 +135,47 @@ resource "aws_iam_role" "ecs_task_execution_role" {
   })
 }
 
+// Add this security group resource
+resource "aws_security_group" "ecs_tasks" {
+  name        = "ecs-tasks-sg"
+  description = "Security group for ECS tasks"
+  vpc_id      = aws_vpc.main.id  // Make sure you have VPC defined
+
+  ingress {
+    protocol        = "tcp"
+    from_port       = 8080
+    to_port         = 8080
+    security_groups = [aws_security_group.alb.id]  // If using ALB
+  }
+
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_ecs_service" "tradapp" {
   name            = "tradapp"
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.service.arn
   desired_count   = 1
+  launch_type     = "EC2"  // Add this
+
+  network_configuration {
+    security_groups = [aws_security_group.ecs_tasks.id]
+    subnets         = aws_subnet.private[*].id  // Make sure you have private subnets defined
+  }
+
+  capacity_provider_strategy {
+    capacity_provider = aws_ecs_capacity_provider.asg_capacity_provider.name
+    weight           = 1
+    base            = 1
+  }
 
   ordered_placement_strategy {
     type  = "binpack"
     field = "cpu"
   }
-
 }
