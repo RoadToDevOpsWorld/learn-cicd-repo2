@@ -59,18 +59,8 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action   = "ecr:GetAuthorizationToken"
-        Resource = "arn:aws:ecr:us-east-1:339712900082:repository/ecr01"
-        Effect   = "Allow"
-      },
-      {
-        Action   = "ecr:BatchCheckLayerAvailability"
-        Resource = "arn:aws:ecr:us-east-1:339712900082:repository/ecr01"
-        Effect   = "Allow"
-      },
-      {
-        Action   = "ecr:GetDownloadUrlForLayer"
-        Resource = "arn:aws:ecr:us-east-1:339712900082:repository/ecr01"
+        Action   = "ecr:*"
+        Resource = "*"
         Effect   = "Allow"
       },
       {
@@ -85,6 +75,15 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
   })
 }
 
+resource "aws_cloudwatch_log_group" "this" {
+  name = "/ecs/tradapp"
+
+  tags = {
+    Environment = "production"
+    Application = "serviceA"
+  }
+}
+
 # ECS task definition
 resource "aws_ecs_task_definition" "service" {
   family                   = "service"
@@ -94,8 +93,8 @@ resource "aws_ecs_task_definition" "service" {
     {
       name      = "first"
       image     = "339712900082.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-13"
-      cpu       = 256  // Increase CPU units
-      memory    = 512
+      cpu       = 1024  // Increase CPU units
+      memory    = 1024
       essential = true
       portMappings = [
         {
@@ -107,7 +106,7 @@ resource "aws_ecs_task_definition" "service" {
       logConfiguration = {  // Add logging
         logDriver = "awslogs"
         options = {
-          "awslogs-group"         = "/ecs/tradapp"
+          "awslogs-group"         = aws_cloudwatch_log_group.this.name
           "awslogs-region"        = "us-east-1"
           "awslogs-stream-prefix" = "ecs"
         }
