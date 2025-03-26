@@ -7,19 +7,47 @@ resource "aws_ecs_cluster" "this" {
   }
 }
 
-resource "aws_ecs_capacity_provider" "this" {
-  name = "this"
+# resource "aws_ecs_capacity_provider" "this" {
+#   name = "this"
+
+#   auto_scaling_group_provider {
+#     auto_scaling_group_arn         = aws_autoscaling_group.this.arn
+#     managed_termination_protection = "ENABLED"
+
+#     managed_scaling {
+#       maximum_scaling_step_size = 20
+#       minimum_scaling_step_size = 1
+#       status                    = "ENABLED"
+#       target_capacity           = 10
+#     }
+#   }
+# }
+
+# Create an ECS Capacity Provider using the existing ASG
+resource "aws_ecs_capacity_provider" "asg_capacity_provider" {
+  name = "asg-capacity-provider"
 
   auto_scaling_group_provider {
-    auto_scaling_group_arn         = aws_autoscaling_group.this.arn
-    managed_termination_protection = "ENABLED"
-
+    auto_scaling_group_arn = aws_autoscaling_group.this.arn
     managed_scaling {
-      maximum_scaling_step_size = 20
+      maximum_scaling_step_size = 10
       minimum_scaling_step_size = 1
       status                    = "ENABLED"
-      target_capacity           = 10
+      target_capacity           = 5
     }
+  }
+}
+
+# Associate the Capacity Provider with the ECS Cluster
+resource "aws_ecs_cluster_capacity_providers" "this" {
+  cluster_name = aws_ecs_cluster.this.name
+
+  capacity_providers = [aws_ecs_capacity_provider.asg_capacity_provider.name]
+
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 2
+    capacity_provider = aws_ecs_capacity_provider.asg_capacity_provider.name
   }
 }
 
