@@ -86,6 +86,6 @@ jobs:
             -out=tfplan
       
       - name: Terraform Apply
-        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+        if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/feature-cd'
         id: apply
         run: terraform apply -auto-approve tfplan
