@@ -25,7 +25,8 @@ jobs:
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          account_id: "905418418143"
+          # account_id: "654654391122"
+          account_id: !Sub "${AWS::AccountId}"
           repo: ecr01
           create_repo: true
           region: us-east-1
