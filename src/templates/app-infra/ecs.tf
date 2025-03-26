@@ -60,17 +60,17 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
     Statement = [
       {
         Action   = "ecr:GetAuthorizationToken"
-        Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
+        Resource = "arn:aws:ecr:us-east-1:654654391122:repository/ecr01"
         Effect   = "Allow"
       },
       {
         Action   = "ecr:BatchCheckLayerAvailability"
-        Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
+        Resource = "arn:aws:ecr:us-east-1:654654391122:repository/ecr01"
         Effect   = "Allow"
       },
       {
         Action   = "ecr:GetDownloadUrlForLayer"
-        Resource = "arn:aws:ecr:us-east-1:905418418143:repository/ecr01"
+        Resource = "arn:aws:ecr:us-east-1:654654391122:repository/ecr01"
         Effect   = "Allow"
       },
       {
@@ -88,17 +88,19 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
 # ECS task definition
 resource "aws_ecs_task_definition" "service" {
   family                   = "service"
+  network_mode            = "awsvpc"
+  requires_compatibilities = ["EC2"]
    container_definitions    = jsonencode([
     {
       name      = "first"
-      image     = "905418418143.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-10"
+      image     = "654654391122.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-12"
       cpu       = 256  // Increase CPU units
       memory    = 512
       essential = true
       portMappings = [
         {
           containerPort = 80
-          hostPort     = 8080
+          # hostPort     = 8080
           protocol     = "tcp"  // Add protocol
         }
       ]
