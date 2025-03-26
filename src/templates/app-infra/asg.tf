@@ -32,6 +32,10 @@ data "aws_ami" "ubuntu_jammy_22_04" {
   }
 }
 
+data "aws_vpc" "default" {
+  default = true
+}
+
 # Lookup an existing subnet with a specific CIDR block
 data "aws_subnet" "this1" {
   filter {

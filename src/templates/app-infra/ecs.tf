@@ -60,17 +60,17 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
     Statement = [
       {
         Action   = "ecr:GetAuthorizationToken"
-        Resource = "arn:aws:ecr:us-east-1:654654391122:repository/ecr01"
+        Resource = "arn:aws:ecr:us-east-1:339712900082:repository/ecr01"
         Effect   = "Allow"
       },
       {
         Action   = "ecr:BatchCheckLayerAvailability"
-        Resource = "arn:aws:ecr:us-east-1:654654391122:repository/ecr01"
+        Resource = "arn:aws:ecr:us-east-1:339712900082:repository/ecr01"
         Effect   = "Allow"
       },
       {
         Action   = "ecr:GetDownloadUrlForLayer"
-        Resource = "arn:aws:ecr:us-east-1:654654391122:repository/ecr01"
+        Resource = "arn:aws:ecr:us-east-1:339712900082:repository/ecr01"
         Effect   = "Allow"
       },
       {
@@ -93,7 +93,7 @@ resource "aws_ecs_task_definition" "service" {
    container_definitions    = jsonencode([
     {
       name      = "first"
-      image     = "654654391122.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-12"
+      image     = "339712900082.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-13"
       cpu       = 256  // Increase CPU units
       memory    = 512
       essential = true
@@ -119,44 +119,44 @@ resource "aws_ecs_task_definition" "service" {
   task_role_arn      = aws_iam_role.ecs_task_execution_role.arn   # Use the task role for additional permissions
 }
 
-resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16"
-  enable_dns_hostnames = true
-  enable_dns_support   = true
+# resource "aws_vpc" "main" {
+#   cidr_block           = "10.0.0.0/16"
+#   enable_dns_hostnames = true
+#   enable_dns_support   = true
 
-  tags = {
-    Name = "ecs-vpc"
-  }
-}
+#   tags = {
+#     Name = "ecs-vpc"
+#   }
+# }
 
-resource "aws_subnet" "private" {
-  count             = 2
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.${count.index + 1}.0/24"
-  availability_zone = data.aws_availability_zones.available.names[count.index]
+# resource "aws_subnet" "private" {
+#   count             = 2
+#   vpc_id            = aws_vpc.main.id
+#   cidr_block        = "10.0.${count.index + 1}.0/24"
+#   availability_zone = data.aws_availability_zones.available.names[count.index]
 
-  tags = {
-    Name = "Private Subnet ${count.index + 1}"
-  }
-}
+#   tags = {
+#     Name = "Private Subnet ${count.index + 1}"
+#   }
+# }
 
 # Get available AZs
-data "aws_availability_zones" "available" {
-  state = "available"
-}
+# data "aws_availability_zones" "available" {
+#   state = "available"
+# }
 
-resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
+# resource "aws_internet_gateway" "main" {
+#   vpc_id = aws_vpc.main.id
 
-  tags = {
-    Name = "Main IGW"
-  }
-}
+#   tags = {
+#     Name = "Main IGW"
+#   }
+# }
 
 resource "aws_security_group" "alb" {
   name        = "alb-sg"
   description = "Security group for ALB"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
     protocol    = "tcp"
@@ -199,7 +199,7 @@ resource "aws_iam_role" "ecs_task_execution_role" {
 resource "aws_security_group" "ecs_tasks" {
   name        = "ecs-tasks-sg"
   description = "Security group for ECS tasks"
-  vpc_id      = aws_vpc.main.id  // Make sure you have VPC defined
+  vpc_id      = data.aws_vpc.default.id  // Make sure you have VPC defined
 
   ingress {
     protocol        = "tcp"
@@ -225,7 +225,7 @@ resource "aws_ecs_service" "tradapp" {
 
   network_configuration {
     security_groups = [aws_security_group.ecs_tasks.id]
-    subnets         = aws_subnet.private[*].id  // Make sure you have private subnets defined
+    subnets         = [data.aws_subnet.this1.id, data.aws_subnet.this2.id]   // Make sure you have private subnets defined
   }
 
   capacity_provider_strategy {
