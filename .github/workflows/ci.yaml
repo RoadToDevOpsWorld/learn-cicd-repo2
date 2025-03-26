@@ -20,13 +20,18 @@ jobs:
           aws-region: us-east-1
           output-credentials: true
 
+      - name: Get AWS Account ID
+        id: aws-account-id
+        run: |
+          ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+          echo "account_id=$ACCOUNT_ID" >> $GITHUB_ENV
+
       - name: Build & Upload backend server image to ECR
         uses: kciter/aws-ecr-action@v5
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # account_id: "654654391122"
-          account_id: !Sub "${AWS::AccountId}"
+          account_id: ${{ env.account_id }}
           repo: ecr01
           create_repo: true
           region: us-east-1
