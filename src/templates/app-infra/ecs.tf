@@ -101,6 +101,7 @@ resource "aws_ecs_task_definition" "service" {
           containerPort = 80
           hostPort     = 8080
           protocol     = "tcp"  // Add protocol
+          appProtocol  = "http"
         }
       ]
       logConfiguration = {  // Add logging
