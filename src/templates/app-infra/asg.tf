@@ -14,7 +14,7 @@ variable "env" {}
 data "aws_ami" "amazon2" {
   filter {
     name   = "image-id"
-    value = "ami-02f624c08a83ca16f"
+    values = ["ami-02f624c08a83ca16f"]
   }
 }
 
