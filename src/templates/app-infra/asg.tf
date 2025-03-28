@@ -97,20 +97,6 @@ resource "aws_autoscaling_group" "this" {
 # Security Group
 resource "aws_security_group" "this1" {
   name_prefix = "alb-sg-${var.env}"
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
 resource "aws_security_group" "this2" {
@@ -123,6 +109,14 @@ resource "aws_vpc_security_group_ingress_rule" "this1" {
   from_port   = 8080
   ip_protocol = "tcp"
   to_port     = 8080
+}
+
+resource "aws_vpc_security_group_egress_rule" "this1" {
+  security_group_id = aws_security_group.this2.id
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = 0
+  ip_protocol = "-1"
+  to_port     = 65535
 }
 
 
