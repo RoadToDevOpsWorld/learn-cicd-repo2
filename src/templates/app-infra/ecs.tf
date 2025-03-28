@@ -227,11 +227,6 @@ resource "aws_ecs_service" "tradapp" {
     base              = 1
   }
 
-  # Add this block for bridge mode
-  network_configuration {
-    security_groups = [aws_security_group.ecs_tasks.id]
-    subnets = [data.aws_subnet.this1.id, data.aws_subnet.this2.id]
-  }
 
   ordered_placement_strategy {
     type  = "binpack"
