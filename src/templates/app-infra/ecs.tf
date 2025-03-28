@@ -2,8 +2,8 @@ resource "aws_ecs_cluster" "this" {
   name = "white-hart"
 
   setting {
-    name  = "tag"
-    value = "true"
+    name  = "containerInsights"
+    value = "disabled"
   }
 }
 
