@@ -87,7 +87,7 @@ resource "aws_cloudwatch_log_group" "this" {
 # ECS task definition
 resource "aws_ecs_task_definition" "service" {
   family                   = "service"
-  network_mode            = "awsvpc"
+  network_mode             = "bridge"
   requires_compatibilities = ["EC2"]
    container_definitions    = jsonencode([
     {
@@ -99,7 +99,7 @@ resource "aws_ecs_task_definition" "service" {
       portMappings = [
         {
           containerPort = 80
-          # hostPort     = 8080
+          hostPort     = 8080
           protocol     = "tcp"  // Add protocol
         }
       ]
