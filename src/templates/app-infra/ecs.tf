@@ -220,17 +220,27 @@ resource "aws_ecs_service" "tradapp" {
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.service.arn
   desired_count   = 1
-  # launch_type     = "EC2"  // Add this
-
 
   capacity_provider_strategy {
     capacity_provider = aws_ecs_capacity_provider.asg_capacity_provider.name
-    weight           = 1
-    base            = 1
+    weight            = 1
+    base              = 1
+  }
+
+  # Add this block for bridge mode
+  network_configuration {
+    security_groups = [aws_security_group.ecs_tasks.id]
   }
 
   ordered_placement_strategy {
     type  = "binpack"
     field = "cpu"
+  }
+
+  # Ensure the service can use the target group
+  load_balancer {
+    target_group_arn = aws_lb_target_group.this.arn
+    container_name   = "first"
+    container_port   = 80
   }
 }
