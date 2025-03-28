@@ -225,6 +225,7 @@ resource "aws_ecs_service" "tradapp" {
   network_configuration {
     security_groups = [aws_security_group.ecs_tasks.id]
     subnets         = [data.aws_subnet.this1.id, data.aws_subnet.this2.id]   // Make sure you have private subnets defined
+    assign_public_ip = true
   }
 
   capacity_provider_strategy {
