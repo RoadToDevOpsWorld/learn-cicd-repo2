@@ -222,11 +222,6 @@ resource "aws_ecs_service" "tradapp" {
   desired_count   = 1
   # launch_type     = "EC2"  // Add this
 
-  network_configuration {
-    security_groups = [aws_security_group.ecs_tasks.id]
-    subnets         = [data.aws_subnet.this1.id, data.aws_subnet.this2.id]   // Make sure you have private subnets defined
-    assign_public_ip = true
-  }
 
   capacity_provider_strategy {
     capacity_provider = aws_ecs_capacity_provider.asg_capacity_provider.name
