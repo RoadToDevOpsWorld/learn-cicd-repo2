@@ -12,7 +12,10 @@ variable "env" {}
 
 # Fetch the latest AMI owned by the user
 data "aws_ami" "amazon2" {
-  id = "ami-02f624c08a83ca16f"
+  filter {
+    name   = "image-id"
+    values = "ami-02f624c08a83ca16f"
+  }
 }
 
 data "aws_vpc" "default" {
@@ -66,7 +69,7 @@ resource "aws_iam_policy_attachment" "this" {
 
 resource "aws_iam_instance_profile" "this" {
   name = "ec2"
-  role = aws_iam_role.role.this
+  role = aws_iam_role.this.name
 }
 
 
