@@ -116,7 +116,6 @@ resource "aws_ecs_task_definition" "service" {
   ])
 
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn  # Use the execution role for pulling from ECR
-  task_role_arn      = aws_iam_role.ecs_task_execution_role.arn   # Use the task role for additional permissions
 }
 
 # resource "aws_vpc" "main" {
@@ -221,7 +220,7 @@ resource "aws_ecs_service" "tradapp" {
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.service.arn
   desired_count   = 1
-  # launch_type     = "EC2"  // Add this
+  launch_type     = "EC2"  // Add this
 
   network_configuration {
     security_groups = [aws_security_group.ecs_tasks.id]
