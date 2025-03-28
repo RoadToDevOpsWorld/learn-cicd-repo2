@@ -77,6 +77,13 @@ resource "aws_iam_instance_profile" "this" {
 resource "aws_launch_template" "this" {
   name_prefix   = "launch-template-${var.env}"
   image_id      = data.aws_ami.amazon2.id
+  block_device_mappings {
+    device_name = "/dev/sdf"
+
+    ebs {
+      volume_size = 30
+    }
+  }
   instance_type = "t3.medium"
 
   network_interfaces {
@@ -98,9 +105,9 @@ resource "aws_launch_template" "this" {
 # Create an Auto Scaling Group using the existing subnet
 resource "aws_autoscaling_group" "this" {
   name                = "asg-${var.env}"
-  desired_capacity    = 2
-  max_size            = 2
-  min_size            = 2
+  desired_capacity    = 1
+  max_size            = 1
+  min_size            = 1
   vpc_zone_identifier = [data.aws_subnet.this1.id, data.aws_subnet.this2.id]
   target_group_arns = [aws_lb_target_group.this.arn]
 
