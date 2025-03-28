@@ -66,8 +66,7 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
       {
         Effect = "Allow"
         Action = [
-          "logs:CreateLogStream",
-          "logs:PutLogEvents"
+          "logs:*"
         ]
         Resource = "*"
       }
@@ -92,8 +91,8 @@ resource "aws_ecs_task_definition" "service" {
    container_definitions    = jsonencode([
     {
       name      = "first"
-      image     = "767397664936.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-14"
-      cpu       = 1024  // Increase CPU units
+      image     = "851725160641.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-15"
+      cpu       = 1024
       memory    = 1024
       essential = true
       portMappings = [

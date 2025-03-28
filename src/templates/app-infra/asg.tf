@@ -11,25 +11,8 @@ variable "cidr2" {}
 variable "env" {}
 
 # Fetch the latest AMI owned by the user
-data "aws_ami" "ubuntu_jammy_22_04" {
-  most_recent = true
-
-  owners = ["099720109477"]
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
+data "aws_ami" "amazon2" {
+  id = "ami-02f624c08a83ca16f"
 }
 
 data "aws_vpc" "default" {
@@ -53,17 +36,53 @@ data "aws_subnet" "this2" {
 }
 
 
+resource "aws_iam_role" "this" {
+  name = "ec2"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  tags = {
+    tag-key = "tag-value"
+  }
+}
+
+resource "aws_iam_policy_attachment" "this" {
+  name       = "test-attachment"
+  roles      = [aws_iam_role.this.name]
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+resource "aws_iam_instance_profile" "this" {
+  name = "ec2"
+  role = aws_iam_role.role.this
+}
+
+
 # Create a Launch Template
 resource "aws_launch_template" "this" {
   name_prefix   = "launch-template-${var.env}"
-  image_id      = data.aws_ami.ubuntu_jammy_22_04.id
+  image_id      = data.aws_ami.amazon2.id
   instance_type = "t3.medium"
 
   network_interfaces {
     associate_public_ip_address = true
     security_groups             = [aws_security_group.this2.id]
   }
-
+  iam_instance_profile {
+    name = "ec2"
+  }
   tag_specifications {
     resource_type = "instance"
 
