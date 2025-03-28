@@ -2,8 +2,8 @@ resource "aws_ecs_cluster" "this" {
   name = "white-hart"
 
   setting {
-    name  = "containerInsights"
-    value = "disabled"
+    name  = "tag"
+    value = "true"
   }
 }
 
@@ -103,14 +103,14 @@ resource "aws_ecs_task_definition" "service" {
           appProtocol  = "http"
         }
       ]
-      logConfiguration = {  // Add logging
-        logDriver = "awslogs"
-        options = {
-          "awslogs-group"         = aws_cloudwatch_log_group.this.name
-          "awslogs-region"        = "us-east-1"
-          "awslogs-stream-prefix" = "ecs"
-        }
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = "/ecs/tradapp"
+        "awslogs-region"        = "us-east-1"
+        "awslogs-stream-prefix" = "ecs"
       }
+    }
     }
   ])
 
