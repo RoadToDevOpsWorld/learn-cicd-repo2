@@ -220,7 +220,7 @@ resource "aws_ecs_service" "tradapp" {
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.service.arn
   desired_count   = 1
-  launch_type     = "EC2"  // Add this
+  # launch_type     = "EC2"  // Add this
 
   network_configuration {
     security_groups = [aws_security_group.ecs_tasks.id]
