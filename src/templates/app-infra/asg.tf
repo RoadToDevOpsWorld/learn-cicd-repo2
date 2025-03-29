@@ -163,12 +163,6 @@ resource "aws_lb" "this" {
 
   enable_deletion_protection = false
 
-  # access_logs {
-  # bucket  = aws_s3_bucket.lb_logs.id
-  #  prefix  = "test-lb"
-  #  enabled = true
-  # }
-
   tags = {
     Environment = var.env
   }
