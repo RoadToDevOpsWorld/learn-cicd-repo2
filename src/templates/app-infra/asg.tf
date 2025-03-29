@@ -11,9 +11,6 @@ variable "cidr2" {}
 variable "env" {}
 
 # Fetch the latest AMI owned by the user
-data "aws_ami" "amazon2" {
-  image_id = "ami-011f06ce3c4c42cbc"
-}
 
 data "aws_vpc" "default" {
   default = true
@@ -78,7 +75,7 @@ resource "aws_iam_policy_attachment" "ssm_policy" {
 # Create a Launch Template
 resource "aws_launch_template" "this" {
   name_prefix   = "launch-template-${var.env}"
-  image_id      = data.aws_ami.amazon2.id
+  image_id      = "ami-011f06ce3c4c42cbc"
   block_device_mappings {
     device_name = "/dev/xvda"
     ebs {
