@@ -12,13 +12,25 @@ variable "env" {}
 
 # Fetch the latest AMI owned by the user
 data "aws_ami" "amazon2" {
+  most_recent = true
+  owners      = ["amazon"]
+
   filter {
-    name   = "image-id"
-    values = ["ami-02f624c08a83ca16f"]
+    name   = "name"
+    values = ["amzn2-ami-ecs-hvm-*-x86_64-ebs"]
+  }
+
+  filter {
+    name   = "state"
+    values = ["available"]
   }
 }
 
-data "aws_vpc" "default" {
+resource "aws_launch_template" "this" {
+  name_prefix   = "launch-template-${var.env}"
+  image_id      = data.aws_ami.ecs_optimized.id
+  # Rest of your configuration...
+}data "aws_vpc" "default" {
   default = true
 }
 
