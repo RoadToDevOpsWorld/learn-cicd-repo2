@@ -7,22 +7,6 @@ resource "aws_ecs_cluster" "this" {
   }
 }
 
-# resource "aws_ecs_capacity_provider" "this" {
-#   name = "this"
-
-#   auto_scaling_group_provider {
-#     auto_scaling_group_arn         = aws_autoscaling_group.this.arn
-#     managed_termination_protection = "ENABLED"
-
-#     managed_scaling {
-#       maximum_scaling_step_size = 20
-#       minimum_scaling_step_size = 1
-#       status                    = "ENABLED"
-#       target_capacity           = 10
-#     }
-#   }
-# }
-
 # Create an ECS Capacity Provider using the existing ASG
 resource "aws_ecs_capacity_provider" "asg_capacity_provider" {
   name = "asg-capacity-provider"
@@ -99,7 +83,7 @@ resource "aws_ecs_task_definition" "service" {
         {
           containerPort = 80
           hostPort     = 8080
-          protocol     = "tcp"  // Add protocol
+          protocol     = "tcp"
           appProtocol  = "http"
         }
       ]
@@ -116,40 +100,6 @@ resource "aws_ecs_task_definition" "service" {
 
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn  # Use the execution role for pulling from ECR
 }
-
-# resource "aws_vpc" "main" {
-#   cidr_block           = "10.0.0.0/16"
-#   enable_dns_hostnames = true
-#   enable_dns_support   = true
-
-#   tags = {
-#     Name = "ecs-vpc"
-#   }
-# }
-
-# resource "aws_subnet" "private" {
-#   count             = 2
-#   vpc_id            = aws_vpc.main.id
-#   cidr_block        = "10.0.${count.index + 1}.0/24"
-#   availability_zone = data.aws_availability_zones.available.names[count.index]
-
-#   tags = {
-#     Name = "Private Subnet ${count.index + 1}"
-#   }
-# }
-
-# Get available AZs
-# data "aws_availability_zones" "available" {
-#   state = "available"
-# }
-
-# resource "aws_internet_gateway" "main" {
-#   vpc_id = aws_vpc.main.id
-
-#   tags = {
-#     Name = "Main IGW"
-#   }
-# }
 
 resource "aws_security_group" "alb" {
   name        = "alb-sg"
