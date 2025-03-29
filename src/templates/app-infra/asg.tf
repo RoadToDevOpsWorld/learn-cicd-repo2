@@ -26,11 +26,7 @@ data "aws_ami" "amazon2" {
   }
 }
 
-resource "aws_launch_template" "this" {
-  name_prefix   = "launch-template-${var.env}"
-  image_id      = data.aws_ami.ecs_optimized.id
-  # Rest of your configuration...
-}data "aws_vpc" "default" {
+data "aws_vpc" "default" {
   default = true
 }
 
