@@ -12,8 +12,6 @@ variable "env" {}
 
 # Fetch the latest AMI owned by the user
 data "aws_ami" "amazon2" {
-  most_recent = true
-  owners      = ["amazon"]
   image_id = "ami-011f06ce3c4c42cbc"
 }
 
