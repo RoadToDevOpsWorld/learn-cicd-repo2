@@ -14,16 +14,7 @@ variable "env" {}
 data "aws_ami" "amazon2" {
   most_recent = true
   owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-ecs-hvm-*-x86_64-ebs"]
-  }
-
-  filter {
-    name   = "state"
-    values = ["available"]
-  }
+  image_id = "ami-011f06ce3c4c42cbc"
 }
 
 data "aws_vpc" "default" {
