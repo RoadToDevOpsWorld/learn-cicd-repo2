@@ -72,6 +72,11 @@ resource "aws_iam_instance_profile" "this" {
   role = aws_iam_role.this.name
 }
 
+resource "aws_iam_policy_attachment" "ssm_policy" {
+  name       = "ssm-policy-attachment"
+  roles      = [aws_iam_role.this.name]
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
 
 # Create a Launch Template
 resource "aws_launch_template" "this" {
