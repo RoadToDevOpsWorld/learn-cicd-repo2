@@ -91,7 +91,7 @@ resource "aws_ecs_task_definition" "service" {
    container_definitions    = jsonencode([
     {
       name      = "first"
-      image     = "471112519282.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-16"
+      image     = "637423192029.dkr.ecr.us-east-1.amazonaws.com/ecr01:tradding-platform-17"
       cpu       = 1024
       memory    = 1024
       essential = true
