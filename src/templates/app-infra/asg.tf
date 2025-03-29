@@ -85,6 +85,11 @@ resource "aws_launch_template" "this" {
     }
   }
   instance_type = "t3.medium"
+  user_data = base64encode(<<EOF
+#!/bin/bash
+echo ECS_CLUSTER=white-hart >> /etc/ecs/ecs.config
+EOF
+  )
 
   network_interfaces {
     associate_public_ip_address = true
