@@ -83,9 +83,10 @@ resource "aws_launch_template" "this" {
   name_prefix   = "launch-template-${var.env}"
   image_id      = data.aws_ami.amazon2.id
   block_device_mappings {
-    device_name = "/dev/sdf"
-
+    device_name = "/dev/xvda"
     ebs {
+      volume_type = "gp3"
+      delete_on_termination = true
       volume_size = 30
     }
   }
